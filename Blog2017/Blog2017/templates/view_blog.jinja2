@@ -1,6 +1,6 @@
 {% extends "Blog2017:templates/layout.jinja2" %}
 
-{% blog content %}
+{% block content %}
     <h1>{{ entry.title }}</h1>
     <hr/>
     <p>{{ entry.body }}</p>

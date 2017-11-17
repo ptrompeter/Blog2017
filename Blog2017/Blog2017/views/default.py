@@ -26,7 +26,7 @@ def index_page(request):
     return {'paginator': paginator}
 
 
-@view_config(route_name='auth', match_param='action=in', rederer='string',
+@view_config(route_name='auth', match_param='action=in', renderer='string',
              request_method='POST')
 @view_config(route_name='auth', match_param='action=out', renderer='string')
 def sign_in_out(request):

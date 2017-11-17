@@ -14,6 +14,12 @@ class BlogRecordService(object):
         return query.order_by(sa.desc(BlogRecord.created))
 
     @classmethod
+    def by_id(cls, _id, request):
+        """"Return a query object with one db record by id."""
+        query = request.dbsession.query(BlogRecord)
+        return query.get(_id)
+
+    @classmethod
     def get_paginator(cls, request, page=1):
         """Return a paginator object to return a limited database resultset."""
         query = request.dbsession.query(BlogRecord)
