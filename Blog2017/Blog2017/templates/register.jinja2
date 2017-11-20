@@ -10,6 +10,15 @@
         {% endfor %}
 
         <div class="form-group">
+            <label for="title">{{form.username.label}}</label>
+            {{form.username(class_='form-control')}}
+        </div>
+
+        {% for error in form.password.errors %}
+            <div class="error">{{error}}</div>
+        {% endfor %}
+
+        <div class="form-group">
             <label for="body">{{form.password.label}}</label>
             {{form.password(class_='form-control')}}
         </div>
