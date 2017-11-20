@@ -18,7 +18,8 @@ def blog_view(request):
 
 
 @view_config(route_name='blog_action', match_param='action=create',
-             renderer='Blog2017:templates/edit_blog.jinja2')
+             renderer='Blog2017:templates/edit_blog.jinja2',
+             permission='create')
 def blog_create(request):
     """Display blog entry form.  If POST and valid, update DB."""
     entry = BlogRecord()
@@ -31,7 +32,8 @@ def blog_create(request):
 
 
 @view_config(route_name='blog_action', match_param='action=edit',
-             renderer='Blog2017:templates/edit_blog.jinja2')
+             renderer='Blog2017:templates/edit_blog.jinja2',
+             permission='create')
 def blog_update(request):
     """Display blog entry data in form; if POST and valid, update entry."""
     blog_id = int(request.params.get('id', -1))
