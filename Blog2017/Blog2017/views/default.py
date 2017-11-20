@@ -1,21 +1,15 @@
 """Home and page non-specific views."""
+from pyramid.httpexceptions import HTTPFound
 from pyramid.response import Response
+from pyramid.security import remember, forget
 from pyramid.view import view_config
 
 from sqlalchemy.exc import DBAPIError
 
 from ..models.user import User
 from ..services.blog_record import BlogRecordService
+from ..services.user import UserService
 
-
-# @view_config(route_name='home', renderer='../templates/mytemplate.jinja2')
-# def my_view(request):
-#     try:
-#         query = request.dbsession.query(User)
-#         one = query.filter(User.name == 'admin').first()
-#     except DBAPIError:
-#         return Response(db_err_msg, content_type='text/plain', status=500)
-#     return {'one': one, 'project': 'Blog2017'}
 
 @view_config(route_name='home',
              renderer='Blog2017:templates/index.jinja2')
@@ -31,6 +25,16 @@ def index_page(request):
 @view_config(route_name='auth', match_param='action=out', renderer='string')
 def sign_in_out(request):
     """Handle login and logout requests and redirect the user."""
+    username = request.POST.get('username')
+    if username:
+        user = UserService.by_name(username, request=request)
+        if user and user.verify_password(request.POST.get('password')):
+            headers = remember(request, user.name)
+        else:
+            headers = forget(request)
+    else:
+        headers = forget(request)
+    return HTTPFound(location=request.route_url('home'), headers=headers)
     return {}
 
 db_err_msg = """\
