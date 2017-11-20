@@ -1,6 +1,6 @@
 """Base init for Blog2017 WSGI app."""
 import os
-from pyramid.authentication import ACLAuthorizationPolicy
+from pyramid.authorization import ACLAuthorizationPolicy
 from pyramid.authentication import AuthTktAuthenticationPolicy
 from pyramid.config import Configurator
 

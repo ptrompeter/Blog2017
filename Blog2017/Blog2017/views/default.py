@@ -6,6 +6,7 @@ from pyramid.view import view_config
 
 from sqlalchemy.exc import DBAPIError
 
+from ..forms import RegistrationForm
 from ..models.user import User
 from ..services.blog_record import BlogRecordService
 from ..services.user import UserService
@@ -36,6 +37,19 @@ def sign_in_out(request):
         headers = forget(request)
     return HTTPFound(location=request.route_url('home'), headers=headers)
     return {}
+
+
+@view_config(route_name='register',
+             renderer='Blog2017:templates/register.jinja2')
+def register(request):
+    """Return a registration form on GET, submit new user on POST."""
+    form = RegistrationForm(request.POST)
+    if request.method == 'POST' and form.validate():
+        new_user = User(name=form.username.data)
+        new_user.set_password(form.password.data.encode('utf8'))
+        request.dbsession.add(new_user)
+        return HTTPFound(location=request.route_url('home'))
+    return {'form': form}
 
 db_err_msg = """\
 Pyramid is having a problem using your SQL database.  The problem

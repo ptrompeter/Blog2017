@@ -23,6 +23,7 @@ requires = [
     'webhelpers2==2.0',
     'paginate==0.5.4',
     'paginate_sqlalchemy==0.2.0',
+    'passlib'
 ]
 
 tests_require = [
