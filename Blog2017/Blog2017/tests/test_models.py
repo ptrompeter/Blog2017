@@ -35,8 +35,6 @@ class BaseTest(unittest.TestCase):
 
         self.session = get_tm_session(session_factory, transaction.manager)
 
-        self.init_database()
-
     def init_database(self):
         """Use meta file to configure test db."""
         from Blog2017.models.meta import Base
@@ -62,6 +60,9 @@ class TestModels(BaseTest):
         bill = User(name='bill', password='billpass')
         self.session.add(bill)
 
+        entry = BlogRecord(title='test', body='test')
+        self.session.add(entry)
+
     def test_bill(self):
         """Test if bill made it through setup."""
         request = dummy_request(self.session)
@@ -79,6 +80,14 @@ class TestModels(BaseTest):
         response = request.dbsession.query(User).filter(User.name == 'bill').first()
         self.assertTrue(response.id)
 
+    def test_entry(self):
+        """Test if entry was properly created."""
+        request = dummy_request(self.session)
+        response = request.dbsession.query(BlogRecord).filter(BlogRecord.title == 'test').first()
+        self.assertEqual(response.id, 1)
+        self.assertEqual(response.title, 'test')
+        self.assertEqual(response.body, 'test')
+        self.assertTrue(response.created)
 
 # def test_model_sets_id_automatically(sql_session):
 #     obj = User(name='mary', password='marypass')
