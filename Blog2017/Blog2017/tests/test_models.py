@@ -68,6 +68,8 @@ class TestModels(BaseTest):
         request = dummy_request(self.session)
         response = request.dbsession.query(User).filter(User.name == 'bill').first()
         self.assertEqual(response.id, 1)
+        self.assertEqual(response.name, "bill")
+        self.assertEqual(response.password, "billpass")
 
     def test_teardown(self):
         """Check for repeats by raising error if more than one bill."""
@@ -80,6 +82,35 @@ class TestModels(BaseTest):
         response = request.dbsession.query(User).filter(User.name == 'bill').first()
         self.assertTrue(response.id)
 
+    def test_set_password(self):
+        """Check set_password method encrypts pws."""
+        mary = User(name='mary', password='marypass')
+        mary.set_password(mary.password)
+        self.assertNotEqual(mary.password, 'marypass')
+
+    def test_verify_password(self):
+        """Check verify_password works."""
+        mary = User(name='mary', password='marypass')
+        mary.set_password(mary.password)
+        self.session.add(mary)
+        request = dummy_request(self.session)
+        response = request.dbsession.query(User).filter(User.name == 'mary').first()
+        check = response.verify_password('marypass')
+        self.assertTrue(check)
+        self.assertNotEqual(response.password, 'marypass')
+
+    def test_verify_password_2(self):
+        """Check auto-updating of unencrypted password."""
+        mary = User(name='mary', password='marypass')
+        self.session.add(mary)
+        request = dummy_request(self.session)
+        response = request.dbsession.query(User).filter(User.name == 'mary').first()
+        check = response.verify_password('marypass')
+        self.assertTrue(check)
+        self.assertNotEqual(response.password, 'marypass')
+        new_response = request.dbsession.query(User).filter(User.name == 'mary').first()
+        self.assertNotEqual(new_response.password, 'marypass')
+
     def test_entry(self):
         """Test if entry was properly created."""
         request = dummy_request(self.session)
@@ -88,12 +119,6 @@ class TestModels(BaseTest):
         self.assertEqual(response.title, 'test')
         self.assertEqual(response.body, 'test')
         self.assertTrue(response.created)
-
-# def test_model_sets_id_automatically(sql_session):
-#     obj = User(name='mary', password='marypass')
-#     sql_session.add(obj)
-#     sql_session.flush()
-#     assert obj.id is not None
 
 
 def test_can_tests_load():
@@ -124,3 +149,11 @@ def test_entry_creation(db):
               'body')
 
     db.execute(query, values)
+
+"""Below: tried to use sql_session fixture from pyramid.sqlalchemy.
+Couldn't make it work."""
+# def test_model_sets_id_automatically(sql_session):
+#     obj = User(name='mary', password='marypass')
+#     sql_session.add(obj)
+#     sql_session.flush()
+#     assert obj.id is not None
