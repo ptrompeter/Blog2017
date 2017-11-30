@@ -48,4 +48,15 @@ def blog_update(request):
             location=request.route_url('blog', id=entry.id, slug=entry.slug))
     return {'form': form, 'action': request.matchdict.get('action')}
 
+
+@view_config(route_name='blog_action', match_param='action=delete', permission='delete')
+def blog_delete(request):
+    """Delete blog entry by id."""
+    blog_id = int(request.params.get('id'))
+    entry = BlogRecordService.by_id(blog_id, request)
+    if not entry:
+        return HTTPNotFound()
+    request.dbsession.delete(entry)
+    return HTTPFound(location=request.route_url('home'))
+
 # TODO: Replace form.populate_obj with BlogRecord model method? Sloppy ATM.

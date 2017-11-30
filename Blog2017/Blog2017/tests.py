@@ -1,3 +1,4 @@
+import os
 import unittest
 import transaction
 
@@ -11,7 +12,7 @@ def dummy_request(dbsession):
 class BaseTest(unittest.TestCase):
     def setUp(self):
         self.config = testing.setUp(settings={
-            'sqlalchemy.url': 'sqlite:///:memory:'
+            'sqlalchemy.url': os.environ.get('BLOG2017_DB_TEST')
         })
         self.config.include('.models')
         settings = self.config.get_settings()
@@ -20,7 +21,7 @@ class BaseTest(unittest.TestCase):
             get_engine,
             get_session_factory,
             get_tm_session,
-            )
+        )
 
         self.engine = get_engine(settings)
         session_factory = get_session_factory(self.engine)
@@ -39,27 +40,27 @@ class BaseTest(unittest.TestCase):
         Base.metadata.drop_all(self.engine)
 
 
-class TestMyViewSuccessCondition(BaseTest):
+# class TestMyViewSuccessCondition(BaseTest):
 
-    def setUp(self):
-        super(TestMyViewSuccessCondition, self).setUp()
-        self.init_database()
+#     def setUp(self):
+#         super(TestMyViewSuccessCondition, self).setUp()
+#         self.init_database()
 
-        from .models import MyModel
+#         from .models import MyModel
 
-        model = MyModel(name='one', value=55)
-        self.session.add(model)
+#         model = MyModel(name='one', value=55)
+#         self.session.add(model)
 
-    def test_passing_view(self):
-        from .views.default import my_view
-        info = my_view(dummy_request(self.session))
-        self.assertEqual(info['one'].name, 'one')
-        self.assertEqual(info['project'], 'Blog2017')
+#     def test_passing_view(self):
+#         from .views.default import my_view
+#         info = my_view(dummy_request(self.session))
+#         self.assertEqual(info['one'].name, 'one')
+#         self.assertEqual(info['project'], 'Blog2017')
 
 
-class TestMyViewFailureCondition(BaseTest):
+# class TestMyViewFailureCondition(BaseTest):
 
-    def test_failing_view(self):
-        from .views.default import my_view
-        info = my_view(dummy_request(self.session))
-        self.assertEqual(info.status_int, 500)
+#     def test_failing_view(self):
+#         from .views.default import my_view
+#         info = my_view(dummy_request(self.session))
+#         self.assertEqual(info.status_int, 500)

@@ -13,4 +13,7 @@
         _query={'id': entry.id}) }}">Edit entry</a>
 
     </p>
+    {% if request.authenticated_userid %}
+        <p><a href="{{ request.route_url('blog_action', action='delete', _query={'id': entry.id}) }}">Delete entry</a></p>
+    {% endif %}
 {% endblock %}
