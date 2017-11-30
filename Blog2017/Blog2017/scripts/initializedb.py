@@ -32,6 +32,8 @@ def main(argv=sys.argv):
     options = parse_vars(argv[2:])
     setup_logging(config_uri)
     settings = get_appsettings(config_uri, options=options)
+    if 'BLOG2017_DB' in os.environ:
+        settings['sqlalchemy.url'] = os.environ['BLOG2017_DB']
 
     engine = get_engine(settings)
     Base.metadata.create_all(engine)

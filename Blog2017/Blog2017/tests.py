@@ -1,3 +1,4 @@
+import os
 import unittest
 import transaction
 
@@ -11,7 +12,7 @@ def dummy_request(dbsession):
 class BaseTest(unittest.TestCase):
     def setUp(self):
         self.config = testing.setUp(settings={
-            'sqlalchemy.url': 'sqlite:///:memory:'
+            'sqlalchemy.url': os.environ.get('BLOG2017_DB_TEST')
         })
         self.config.include('.models')
         settings = self.config.get_settings()
