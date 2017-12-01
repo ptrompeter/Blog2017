@@ -51,6 +51,12 @@ def register(request):
         return HTTPFound(location=request.route_url('home'))
     return {'form': form}
 
+
+@view_config(route_name='api')
+def check_api(request):
+    """Return a string to a call to /api."""
+    return Response('this api call returns a string.')
+
 db_err_msg = """\
 Pyramid is having a problem using your SQL database.  The problem
 might be caused by one of the following things:

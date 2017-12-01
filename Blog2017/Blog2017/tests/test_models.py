@@ -111,6 +111,13 @@ class TestModels(BaseTest):
         new_response = request.dbsession.query(User).filter(User.name == 'mary').first()
         self.assertNotEqual(new_response.password, 'marypass')
 
+    def test_get_user(self):
+        """Check functionality of get_user classmethod."""
+        request = dummy_request(self.session)
+        request.params['name'] = 'bill'
+        bill = User.get_user(request)
+        self.assertEqual(bill.name, 'bill')
+
     def test_entry(self):
         """Test if entry was properly created."""
         request = dummy_request(self.session)

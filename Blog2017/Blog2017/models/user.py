@@ -30,3 +30,10 @@ class User(Base):
         """Set the password attribute on the User object."""
         password_hash = blog2017_pwd_context.encrypt(password)
         self.password = password_hash
+
+    @classmethod
+    def get_user(cls, request):
+        """Return a single user from db by name."""
+        username = request.params.get('name')
+        user = request.dbsession.query(User).filter(User.name == username).one()
+        return user

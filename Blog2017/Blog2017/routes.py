@@ -10,3 +10,4 @@ def includeme(config):
                      factory='Blog2017.security.BlogRecordFactory')
     config.add_route('auth', '/sign/{action}')
     config.add_route('register', '/register')
+    config.add_route('api', '/api')
