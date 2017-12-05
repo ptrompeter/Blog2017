@@ -1,4 +1,5 @@
 """Home and page non-specific views."""
+import pdb
 from pyramid.httpexceptions import HTTPFound
 from pyramid.response import Response
 from pyramid.security import remember, forget

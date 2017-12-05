@@ -32,8 +32,7 @@ class User(Base):
         self.password = password_hash
 
     @classmethod
-    def get_user(cls, request):
+    def get(cls, name, request):
         """Return a single user from db by name."""
-        username = request.params.get('name')
-        user = request.dbsession.query(User).filter(User.name == username).one()
+        user = request.dbsession.query(User).filter(User.name == name).one()
         return user
