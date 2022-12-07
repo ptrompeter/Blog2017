@@ -1,7 +1,7 @@
 arrow==0.10.0
 binaryornot==0.4.4
 -e git+git@github.com:ptrompeter/Blog2017.git@fb169ffdd53b0b7588ea2b301992f51091d91c23#egg=Blog2017&subdirectory=Blog2017
-certifi==2017.11.5
+certifi==2022.12.7
 chardet==3.0.4
 click==6.7
 cookiecutter==1.6.0
